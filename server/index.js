@@ -1,9 +1,11 @@
 const express = require('express')
 const mongoose = require('mongoose')
+require('dotenv').config()
+
 
 const app = express()
 //dot file this shit
-mongoose.connect('mongodb://localhost:27017/bookstore')
+mongoose.connect(process.env.MONGO_CONNECTION_STRING)
 
 const BookSchema = new mongoose.Schema({
     title: String,
