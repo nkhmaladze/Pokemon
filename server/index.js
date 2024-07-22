@@ -56,10 +56,22 @@ app.put('/updateBook/:id', async (req, res) => {
         res.status(500).json({ message: "Error updating book", err })
     }
 })
-//Todo :
-//app.put()
-//app.delete()
 
+app.delete('/deleteBook/:id', async(req, res) =>{
+    const id = req.params.id
+
+    try{
+        const deletedData = await BookModel.findByIdAndDelete(id)
+
+        if (!deletedData){
+            return res.status(404).json({ message: "Book not found" })
+        }
+        res.status(200).json({ message: "Book deleted successfully", deletedData })
+    }catch(err){
+        console.log(err)
+        res.status(500).json({ message: "Error deleting book", err })
+    }
+})
 
 
 app.listen(3001, ()=>{
