@@ -32,14 +32,30 @@ app.post('/addBook', async (req, res) =>{
     const data = req.body
     try { 
         const savedData = await new BookModel(data).save()
-        res.status(200).json({ message: "Correct Data", savedData})
+        res.status(200).json({ message: "Book added successfuly", savedData})
     }
     catch(err){
         console.log(err)
-        res.status(500).json({ message: "Wrong Data", error})
+        res.status(500).json({ message: "Error adding book", error})
     }
 })
 
+app.put('/updateBook/:id', async (req, res) => {
+    const id = req.params.id
+    const data = req.body
+    
+    try{
+        const updatedData = await BookModel.findByIdAndUpdate(id, data,)
+
+        if(!updatedData){
+            return res.status(404).json({ message: "Book not found" })
+        }
+        res.status(200).json({ message: "Boook updated successfully", updatedData })
+    }catch(err){
+        console.log(err)
+        res.status(500).json({ message: "Error updating book", err })
+    }
+})
 //Todo :
 //app.put()
 //app.delete()
