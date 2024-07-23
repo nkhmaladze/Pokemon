@@ -7,7 +7,6 @@ require('dotenv').config()
 const app = express()
 app.use(bodyParser.json())
 
-
 mongoose.connect(process.env.MONGO_CONNECTION_STRING)
 
 
