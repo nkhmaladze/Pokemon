@@ -6,12 +6,12 @@ const ebayAuthToken = new EbayAuthToken({
     clientId: process.env.APP_ID_EBAY,
     clientSecret: process.env.EBAY_SECRET,
     redirectUri: process.env.REDIRECT_URI,
-    env: 'SANDBOX'
+    env: 'PRODUCTION'
 });
 
 async function getOAuthToken() {
     try {
-        const tokenResponse = await ebayAuthToken.getApplicationToken('SANDBOX');
+        const tokenResponse = await ebayAuthToken.getApplicationToken('PRODUCTION');
         console.log('OAuth Token:', tokenResponse);
         return tokenResponse;
     } catch (error) {
@@ -27,7 +27,7 @@ async function searchEbay(keyword) {
         return;
     }
 
-    const url = 'https://svcs.sandbox.ebay.com/services/search/FindingService/v1';
+    const url = 'https://svcs.ebay.com/services/search/FindingService/v1';
     const params = {
         'OPERATION-NAME': 'findItemsByKeywords',
         'SERVICE-VERSION': '1.0.0',
