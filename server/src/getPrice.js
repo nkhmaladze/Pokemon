@@ -8,7 +8,12 @@ const ebayAuthToken = new EbayAuthToken({
     redirectUri: process.env.REDIRECT_URI,
     env: 'PRODUCTION'
 });
-
+//TODO: Fix Money( some thing show up in other currency)
+//      Make the price be legit
+//      Filter out sellers by reputation
+//      Get statistically correct Price
+//      Filter out Graded Card
+  
 async function getOAuthToken() {
     try {
         const tokenResponse = await ebayAuthToken.getApplicationToken('PRODUCTION');
@@ -35,7 +40,8 @@ async function searchEbay(keyword) {
         'RESPONSE-DATA-FORMAT': 'JSON',
         'REST-PAYLOAD': true,
         'keywords': keyword,
-        'paginationInput.entriesPerPage': '5'
+        'paginationInput.entriesPerPage': '100',
+        'sortOrder': 'PricePlusShippingLowest'	
     };
 
     try {
@@ -48,22 +54,26 @@ async function searchEbay(keyword) {
 
         const prices = items.map(item => {
             return {
-                price: item.sellingStatus[0].currentPrice[0].__value__,
+                price: parseFloat( item.sellingStatus[0].currentPrice[0].__value__),
                 itemId: item.itemId[0],
-                title: item.title[0]
+                title: item.title[0],
+                itemUrl: item.viewItemURL[0],
+                itemImageUrl: item.galleryURL[0]
             };
         });
-
-        //console.log(prices)
+        prices.sort((a, b) => a.price - b.price); //b-a for deschending
+        
+        //console.log('Search Results:', JSON.stringify(response.data, null, 2));
+        console.log(prices)
+        //console.log(prices.length)
         return prices;
 
-        //console.log('Search Results:', JSON.stringify(response.data, null, 2));
     } catch (error) {
         console.error('Error searching eBay:', error);
         return [];
     }
 }
-
+//ascending, descending, middle get
 module.exports = { searchEbay };
 
 
