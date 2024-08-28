@@ -12,7 +12,7 @@ const ebayAuthToken = new EbayAuthToken({
 async function getOAuthToken() {
     try {
         const tokenResponse = await ebayAuthToken.getApplicationToken('PRODUCTION');
-        console.log('OAuth Token:', tokenResponse);
+        //console.log('OAuth Token:', tokenResponse);
         return tokenResponse;
     } catch (error) {
         console.error('Error obtaining OAuth token:', error);
@@ -35,7 +35,7 @@ async function searchEbay(keyword) {
         'RESPONSE-DATA-FORMAT': 'JSON',
         'REST-PAYLOAD': true,
         'keywords': keyword,
-        'paginationInput.entriesPerPage': '2'
+        'paginationInput.entriesPerPage': '5'
     };
 
     try {
@@ -43,12 +43,29 @@ async function searchEbay(keyword) {
             //'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
         } });
-        console.log('Search Results:', JSON.stringify(response.data, null, 2));
+
+        const items = response.data.findItemsByKeywordsResponse[0].searchResult[0].item || [];
+
+        const prices = items.map(item => {
+            return {
+                price: item.sellingStatus[0].currentPrice[0].__value__,
+                itemId: item.itemId[0],
+                title: item.title[0]
+            };
+        });
+
+        //console.log(prices)
+        return prices;
+
+        //console.log('Search Results:', JSON.stringify(response.data, null, 2));
     } catch (error) {
         console.error('Error searching eBay:', error);
+        return [];
     }
 }
-searchEbay('Pokemon 12/17')
+
+module.exports = { searchEbay };
+
 
 // require('dotenv').config()
 // const ebayToken = require("ebay-oauth-nodejs-client")
