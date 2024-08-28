@@ -35,20 +35,20 @@ async function searchEbay(keyword) {
         'RESPONSE-DATA-FORMAT': 'JSON',
         'REST-PAYLOAD': true,
         'keywords': keyword,
-        'paginationInput.entriesPerPage': '10'
+        'paginationInput.entriesPerPage': '2'
     };
 
     try {
         const response = await axios.get(url, { params,headers: {
-            'Authorization': `Bearer ${token}`,
+            //'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
         } });
-        console.log('Search Results:', response.data);
+        console.log('Search Results:', JSON.stringify(response.data, null, 2));
     } catch (error) {
         console.error('Error searching eBay:', error);
     }
 }
-searchEbay('harry potter phoenix')
+searchEbay('Pokemon 12/17')
 
 // require('dotenv').config()
 // const ebayToken = require("ebay-oauth-nodejs-client")
