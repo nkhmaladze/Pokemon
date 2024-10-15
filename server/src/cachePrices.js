@@ -48,4 +48,4 @@ async function cacheData(keyword) {
     }
 }
 
-cacheData('Pokemon 58/102');
+cacheData('Pokemon English 169/165');

@@ -2,12 +2,28 @@ const express = require("express")
 const path = require("path")
 const bcrypt = require("bcrypt")
 const collection = require("./config")
+const mongoose = require("mongoose")
+const Price = require("./models/Price")
 
 const app = express()
 
+mongoose.connect(process.env.MONGO_CONNECTION_STRING3, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.log('Error connecting to MongoDB:', err))
+
+
+  app.get('/getPrices', async (req, res) => {
+  try {
+    const prices = await Price.find();  // Fetch all documents from the Price collection
+    res.json(prices);  // Send the data back as JSON
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch prices' });
+  }
+});
+
+
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
-
 
 app.set('view engine', 'ejs')
 
@@ -54,8 +70,6 @@ app.post("/login", async (req, res) =>{
         res.send("Wront login details")
     }
 })
-
-
 
 
 app.listen(5000, ()=>{
